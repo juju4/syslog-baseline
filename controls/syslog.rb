@@ -67,6 +67,11 @@ control 'syslog-2.0' do
       its('users') { should eq ['root'] }
       its('list.length') { should eq 1 }
     end
+  elsif os.redhat?
+    describe processes('rsyslogd') do
+      its('users') { should eq ['root'] }
+      its('list.length') { should eq 1 }
+    end
   else
     describe processes('rsyslogd') do
       its('users') { should eq ['syslog'] }
