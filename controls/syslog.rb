@@ -68,7 +68,7 @@ control 'syslog-2.0' do
     describe file('/etc/rsyslog.conf') do
       it { should be_file }
       it { should be_owned_by 'root' }
-      its('mode') { should cmp (/064[04]/) }
+      its('mode') { should cmp (%r{/064[04]/}) }
     end
   end
 end
