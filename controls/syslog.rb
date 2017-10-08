@@ -68,7 +68,7 @@ control 'syslog-2.0' do
     describe file('/etc/rsyslog.conf') do
       it { should be_file }
       it { should be_owned_by 'root' }
-      its('mode') { should cmp /064(0|4)/ }
+      its('mode') { should cmp (/064(0|4)/) }
     end
   end
 end
@@ -170,6 +170,6 @@ if syslog_servers
           its('content') { should match "^[^#].*@#{server}" }
         end
       end
-    nd
+    end
   end
 end
