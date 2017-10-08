@@ -68,7 +68,7 @@ control 'syslog-2.0' do
     describe file('/etc/rsyslog.conf') do
       it { should be_file }
       it { should be_owned_by 'root' }
-      its('mode') { should cmp (/064(0|4)/) }
+      its('mode') { should cmp %r{064[04]} }
     end
   end
 end
@@ -165,7 +165,7 @@ if syslog_servers
     desc 'Ensure central remote syslog servers are configured in defined files'
     syslog_servers.each do |server|
       syslog_servers_files.each do |file|
-        describe file("#{file}") do
+        describe file(file.to_s) do
           it { should be_file }
           its('content') { should match "^[^#].*@#{server}" }
         end
