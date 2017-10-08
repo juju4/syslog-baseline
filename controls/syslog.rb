@@ -4,6 +4,11 @@
 
 title 'syslog section'
 
+syslog_servers = attribute('syslog_servers', default: false, description: 'Should we control that central syslog servers are configured')
+# syslog_servers = %( syslog1.example.com syslog2.example.com)
+syslog_servers_files = attribute('syslog_servers_files', default: false, description: 'Where central syslog servers should be configured')
+# syslog_servers_files = %( /etc/rsyslog.conf /etc/rsyslog.d/myfile )
+
 control 'syslog-1.0' do # A unique ID for this control
   impact 0.7 # The criticality, if this control fails.
   title 'syslogd should be present'
@@ -63,7 +68,7 @@ control 'syslog-2.0' do
     describe file('/etc/rsyslog.conf') do
       it { should be_file }
       it { should be_owned_by 'root' }
-      its('mode') { should cmp '0644' }
+      its('mode') { should cmp /064(0|4)/ }
     end
   end
 end
@@ -102,6 +107,7 @@ control 'syslog-4.0' do
     end
     describe file('/var/log/system.log') do
       it { should be_file }
+u
       it { should be_owned_by 'root' }
       its('mode') { should cmp '0640' }
       its('content') { should match 'last message repeated' }
@@ -150,5 +156,20 @@ control 'syslog-5.0' do
       it { should <= Time.now.to_i }
       it { should >= Time.now.to_i - 900 }
     end
+  end
+end
+
+if syslog_servers
+  control 'syslog-6.0' do
+    title 'Central syslog servers'
+    desc 'Ensure central remote syslog servers are configured in defined files'
+    syslog_servers.each do |server|
+      syslog_servers_files.each do |file|
+        describe file("#{file}") do
+          it { should be_file }
+          its('content') { should match "^[^#].*@#{server}" }
+        end
+      end
+    nd
   end
 end
