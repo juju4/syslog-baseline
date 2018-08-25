@@ -2,8 +2,8 @@ source 'https://rubygems.org'
 
 gem 'inspec', '~> 1'
 gem 'rack', '1.6.4'
-gem 'rake'
 gem 'highline', '~> 1.6.0'
+gem 'rake'
 gem 'rubocop', '~> 0.49.0'
 
 group :tools do
