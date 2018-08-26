@@ -78,6 +78,7 @@ control 'syslog-3.0' do
   impact 0.7
   title 'syslogd should be running'
   desc 'Ensure syslogd is running'
+  only_if { !(virtualization.role == 'guest' && virtualization.system == 'docker') }
   if os.darwin?
     describe processes('syslogd') do
       its('users') { should eq ['root'] }
