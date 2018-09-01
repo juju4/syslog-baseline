@@ -101,6 +101,7 @@ control 'syslog-4.0' do
   impact 0.7
   title 'syslogd should have log files'
   desc 'Ensure syslogd logs file are present'
+  only_if { !(virtualization.role == 'guest' && virtualization.system == 'docker') }
   if os.darwin?
     describe file('/var/log') do
       it { should be_directory }
@@ -142,6 +143,7 @@ control 'syslog-5.0' do
   impact 0.7
   title 'syslogd updated log files'
   desc 'Ensure syslogd logs file were updated less than 900s in the past'
+  only_if { !(virtualization.role == 'guest' && virtualization.system == 'docker') }
   if os.darwin?
     describe file('/var/log/system.log').mtime.to_i do
       it { should <= Time.now.to_i }
