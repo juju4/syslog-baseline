@@ -133,7 +133,8 @@ control 'syslog-4.0' do
     describe file('/var/log/syslog') do
       it { should be_file }
       it { should be_owned_by 'syslog' }
-      its('mode') { should cmp '0644' }
+      # its('mode') { should cmp '0644' }
+      its('mode') { should cmp(/0644|0640/) }
       # its('content') { should match 'last message repeated' }
     end
   end
