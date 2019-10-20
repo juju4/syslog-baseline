@@ -127,6 +127,7 @@ control 'syslog-4.0' do
       its('mode') { should cmp '0600' }
       # its('mode') { should cmp '0640' }
       # its('content') { should match 'last message repeated' }
+      its('content') { should_not match 'open error: Permission denied' }
     end
   else
     ## ubuntu
@@ -136,6 +137,7 @@ control 'syslog-4.0' do
       # its('mode') { should cmp '0644' }
       its('mode') { should cmp(/0644|0640/) }
       # its('content') { should match 'last message repeated' }
+      its('content') { should_not match 'open error: Permission denied' }
     end
   end
 end
