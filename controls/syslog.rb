@@ -9,6 +9,16 @@ syslog_servers = attribute('syslog_servers', default: false, description: 'Shoul
 # syslog_servers = %( syslog1.example.com syslog2.example.com)
 syslog_servers_files = attribute('syslog_servers_files', default: false, description: 'Where central syslog servers should be configured')
 # syslog_servers_files = %( /etc/rsyslog.conf /etc/rsyslog.d/myfile )
+syslog_content_check = attribute(
+  'syslog_content_check',
+  default: [
+    'Linux version',
+    'kernel: ',
+    'systemd[',
+    'origin software="rsyslogd"'
+  ],
+  description: 'list of strings to check as present in system log'
+)
 
 control 'syslog-1.0' do # A unique ID for this control
   impact 0.7 # The criticality, if this control fails.
@@ -112,8 +122,6 @@ control 'syslog-4.0' do
       it { should be_file }
       it { should be_owned_by 'root' }
       its('mode') { should cmp '0640' }
-      its('content') { should match 'last message repeated' }
-      its('content') { should match 'WindowServer' }
     end
     describe file('/var/log/asl/StoreData') do
       it { should be_file }
@@ -125,18 +133,40 @@ control 'syslog-4.0' do
       it { should be_file }
       it { should be_owned_by 'root' }
       its('mode') { should cmp '0600' }
-      # its('mode') { should cmp '0640' }
-      # its('content') { should match 'last message repeated' }
-      its('content') { should_not match 'open error: Permission denied' }
     end
   else
     ## ubuntu
     describe file('/var/log/syslog') do
       it { should be_file }
       it { should be_owned_by 'syslog' }
-      # its('mode') { should cmp '0644' }
       its('mode') { should cmp(/0644|0640/) }
-      # its('content') { should match 'last message repeated' }
+    end
+  end
+end
+
+# content may vary depending on recent boot and general system state
+control 'syslog-4.1' do
+  impact 0.7
+  title 'syslogd log files content check'
+  desc 'Validate syslogd logs file content'
+  if os.darwin?
+    describe file('/var/log/system.log') do
+      its('content') { should match 'last message repeated' }
+      its('content') { should match 'WindowServer' }
+    end
+  elsif os.redhat?
+    describe file('/var/log/messages') do
+      syslog_content_check.each do |str|
+        its('content') { should match str }
+      end
+      its('content') { should_not match 'open error: Permission denied' }
+    end
+  else
+    ## ubuntu
+    describe file('/var/log/syslog') do
+      syslog_content_check.each do |str|
+        its('content') { should match str }
+      end
       its('content') { should_not match 'open error: Permission denied' }
     end
   end
