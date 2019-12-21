@@ -3,7 +3,9 @@
 language: ruby
 cache: bundler
 rvm:
-  - 2.5.1
+  - 2.5
+  - 2.6
+  - head
 
 bundler_args: --without integration
 script: bundle exec rake
