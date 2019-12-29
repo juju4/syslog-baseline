@@ -101,17 +101,17 @@ control 'syslog-3.0' do
   if os.darwin?
     describe processes('syslogd') do
       its('users') { should eq ['root'] }
-      its('list.length') { should eq 1 }
+      its('entries.length') { should eq 1 }
     end
   elsif os.redhat?
     describe processes('rsyslogd') do
       its('users') { should eq ['root'] }
-      its('list.length') { should eq 1 }
+      its('entries.length') { should eq 1 }
     end
   else
     describe processes('rsyslogd') do
       its('users') { should eq ['syslog'] }
-      its('list.length') { should eq 1 }
+      its('entries.length') { should eq 1 }
     end
   end
 end
