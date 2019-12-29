@@ -157,18 +157,21 @@ control 'syslog-4.0b' do
       it { should be_owned_by 'root' }
       its('group') { should eq 'root' }
       its('mode') { should cmp '0600' }
+      it { should_not be_more_permissive_than('0600') }
     end
     describe file('/var/log/secure') do
       it { should be_file }
       it { should be_owned_by 'root' }
       its('group') { should eq 'root' }
       its('mode') { should cmp '0600' }
+      it { should_not be_more_permissive_than('0600') }
     end
     describe file('/var/log/wtmp') do
       it { should be_file }
       it { should be_owned_by 'root' }
       its('group') { should eq 'utmp' }
       its('mode') { should eq '0664' }
+      it { should_not be_more_permissive_than('0664') }
     end
   end
 end
@@ -191,18 +194,21 @@ control 'syslog-4.0c' do
       it { should be_owned_by 'syslog' }
       its('group') { should eq 'adm' }
       its('mode') { should eq '0640' }
+      it { should_not be_more_permissive_than('0640') }
     end
     describe file('/var/log/syslog') do
       it { should be_file }
       it { should be_owned_by 'syslog' }
       its('group') { should eq 'adm' }
       its('mode') { should eq '0640' }
+      it { should_not be_more_permissive_than('0640') }
     end
     describe file('/var/log/wtmp') do
       it { should be_file }
       it { should be_owned_by 'root' }
       its('group') { should eq 'utmp' }
       its('mode') { should eq '0664' }
+      it { should_not be_more_permissive_than('0664') }
     end
   end
 end
