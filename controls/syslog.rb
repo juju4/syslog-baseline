@@ -5,13 +5,13 @@
 
 title 'syslog section'
 
-syslog_servers = attribute('syslog_servers', default: false, description: 'Should we control that central syslog servers are configured')
+syslog_servers = input('syslog_servers', value: false, description: 'Should we control that central syslog servers are configured')
 # syslog_servers = %( syslog1.example.com syslog2.example.com)
-syslog_servers_files = attribute('syslog_servers_files', default: false, description: 'Where central syslog servers should be configured')
+syslog_servers_files = input('syslog_servers_files', value: false, description: 'Where central syslog servers should be configured')
 # syslog_servers_files = %( /etc/rsyslog.conf /etc/rsyslog.d/myfile )
-syslog_content_check = attribute(
+syslog_content_check = input(
   'syslog_content_check',
-  default: [
+  value: [
     'Linux version',
     'kernel: ',
     'systemd[',
@@ -19,9 +19,9 @@ syslog_content_check = attribute(
   ],
   description: 'list of strings to check as present in system log'
 )
-syslog_notcontent_check = attribute(
+syslog_notcontent_check = input(
   'syslog_notcontent_check',
-  default: [
+  value: [
     'open error: Permission denied',
     'syslogd: action \'action .*\' resumed',
     'syslogd: action \'action .*\' suspended'
