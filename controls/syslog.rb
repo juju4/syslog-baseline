@@ -147,7 +147,7 @@ control 'syslog-4.0b' do
   only_if { !(virtualization.role == 'guest' && virtualization.system == 'docker') }
   if os.redhat?
     describe file('/var/log') do
-      it { should be_file }
+      it { should be_directory }
       it { should be_owned_by 'root' }
       its('group') { should eq 'root' }
       its('mode') { should eq '0755' }
@@ -181,7 +181,7 @@ control 'syslog-4.0c' do
   if os.debian?
     ## ubuntu
     describe file('/var/log') do
-      it { should be_file }
+      it { should be_directory }
       it { should be_owned_by 'root' }
       its('group') { should eq 'syslog' }
       its('mode') { should eq '0775' }
