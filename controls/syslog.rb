@@ -19,6 +19,15 @@ syslog_content_check = attribute(
   ],
   description: 'list of strings to check as present in system log'
 )
+syslog_notcontent_check = attribute(
+  'syslog_notcontent_check',
+  default: [
+    'open error: Permission denied',
+    'syslogd: action \'action .*\' resumed',
+    'syslogd: action \'action .*\' suspended'
+  ],
+  description: 'list of strings to check as not present in system log'
+)
 
 control 'syslog-1.0' do # A unique ID for this control
   impact 0.7 # The criticality, if this control fails.
@@ -129,17 +138,55 @@ control 'syslog-4.0' do
       its('mode') { should cmp '0644' }
     end
   elsif os.redhat?
+    describe file('/var/log') do
+      it { should be_file }
+      it { should be_owned_by 'root' }
+      its('group') { should eq 'root' }
+      its('mode') { should eq '0755' }
+    end
     describe file('/var/log/messages') do
       it { should be_file }
       it { should be_owned_by 'root' }
+      its('group') { should eq 'root' }
       its('mode') { should cmp '0600' }
+    end
+    describe file('/var/log/secure') do
+      it { should be_file }
+      it { should be_owned_by 'root' }
+      its('group') { should eq 'root' }
+      its('mode') { should cmp '0600' }
+    end
+    describe file('/var/log/wtmp') do
+      it { should be_file }
+      it { should be_owned_by 'root' }
+      its('group') { should eq 'utmp' }
+      its('mode') { should eq '0664' }
     end
   else
     ## ubuntu
+    describe file('/var/log') do
+      it { should be_file }
+      it { should be_owned_by 'root' }
+      its('group') { should eq 'syslog' }
+      its('mode') { should eq '0775' }
+    end
+    describe file('/var/log/auth.log') do
+      it { should be_file }
+      it { should be_owned_by 'syslog' }
+      its('group') { should eq 'adm' }
+      its('mode') { should eq '0640' }
+    end
     describe file('/var/log/syslog') do
       it { should be_file }
       it { should be_owned_by 'syslog' }
-      its('mode') { should cmp(/0644|0640/) }
+      its('group') { should eq 'adm' }
+      its('mode') { should eq '0640' }
+    end
+    describe file('/var/log/wtmp') do
+      it { should be_file }
+      it { should be_owned_by 'root' }
+      its('group') { should eq 'utmp' }
+      its('mode') { should eq '0664' }
     end
   end
 end
@@ -159,7 +206,9 @@ control 'syslog-4.1' do
       syslog_content_check.each do |str|
         its('content') { should match str }
       end
-      its('content') { should_not match 'open error: Permission denied' }
+      syslog_notcontent_check.each do |str|
+        its('content') { should_not match str }
+      end
     end
   else
     ## ubuntu
@@ -167,7 +216,9 @@ control 'syslog-4.1' do
       syslog_content_check.each do |str|
         its('content') { should match str }
       end
-      its('content') { should_not match 'open error: Permission denied' }
+      syslog_notcontent_check.each do |str|
+        its('content') { should_not match str }
+      end
     end
   end
 end
