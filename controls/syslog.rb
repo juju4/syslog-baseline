@@ -116,9 +116,9 @@ control 'syslog-3.0' do
   end
 end
 
-control 'syslog-4.0' do
+control 'syslog-4.0a' do
   impact 0.7
-  title 'syslogd should have log files'
+  title 'syslogd should have log files - darwin'
   desc 'Ensure syslogd logs file are present'
   only_if { !(virtualization.role == 'guest' && virtualization.system == 'docker') }
   if os.darwin?
@@ -137,7 +137,15 @@ control 'syslog-4.0' do
       it { should be_owned_by 'root' }
       its('mode') { should cmp '0644' }
     end
-  elsif os.redhat?
+  end
+end
+
+control 'syslog-4.0b' do
+  impact 0.7
+  title 'syslogd should have log files - redhat'
+  desc 'Ensure syslogd logs file are present'
+  only_if { !(virtualization.role == 'guest' && virtualization.system == 'docker') }
+  if os.redhat?
     describe file('/var/log') do
       it { should be_file }
       it { should be_owned_by 'root' }
@@ -162,7 +170,14 @@ control 'syslog-4.0' do
       its('group') { should eq 'utmp' }
       its('mode') { should eq '0664' }
     end
-  else
+end
+
+control 'syslog-4.0c' do
+  impact 0.7
+  title 'syslogd should have log files - debian/ubuntu'
+  desc 'Ensure syslogd logs file are present'
+  only_if { !(virtualization.role == 'guest' && virtualization.system == 'docker') }
+  if os.debian?
     ## ubuntu
     describe file('/var/log') do
       it { should be_file }
