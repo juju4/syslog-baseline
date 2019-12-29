@@ -170,6 +170,7 @@ control 'syslog-4.0b' do
       its('group') { should eq 'utmp' }
       its('mode') { should eq '0664' }
     end
+  end
 end
 
 control 'syslog-4.0c' do
