@@ -5,4 +5,4 @@ copyright: juju4
 copyright_email: juju4@users.noreply.github.com
 license: All Rights Reserved
 summary: An InSpec Compliance Profile for syslogd
-version: 0.1.0
+version: 0.2.0
