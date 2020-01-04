@@ -7,8 +7,8 @@ rvm:
   - 2.6
   - ruby-head
 
-environment:
-  - CHEF_LICENSE: accept-no-persist
+env:
+  - CHEF_LICENSE=accept-no-persist
 
 bundler_args: --without integration
 script: bundle exec rake
