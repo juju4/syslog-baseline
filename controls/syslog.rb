@@ -24,7 +24,7 @@ syslog_notcontent_check = input(
   value: [
     'open error: Permission denied',
     'syslogd: action \'action .*\' resumed',
-    'syslogd: action \'action .*\' suspended'
+    'syslogd: action \'action .*\' suspended',
   ],
   description: 'list of strings to check as not present in system log'
 )
