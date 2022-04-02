@@ -15,7 +15,7 @@ syslog_content_check = input(
     'Linux version',
     'kernel: ',
     'systemd[',
-    'origin software="rsyslogd"'
+    'origin software="rsyslogd"',
   ],
   description: 'list of strings to check as present in system log'
 )
