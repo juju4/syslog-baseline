@@ -1,4 +1,4 @@
-name: syslog
+name: syslog-basline
 title: Syslogd baseline - InSpec Profile
 maintainer: juju4
 copyright: juju4
